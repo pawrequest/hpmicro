@@ -242,4 +242,6 @@ cython_debug/
 #.idea/
 
 secrets.py
+wifi_secrets.py
 webrepl_cfg.py
+wifi_config.py

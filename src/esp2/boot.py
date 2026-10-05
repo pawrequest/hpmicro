@@ -3,8 +3,7 @@
 # esp.osdebug(None)
 import time
 
-from config import WIFI_TIMEOUT_SECONDS
-from esp_rx.secrets import DNS, GATEWAY, IP, SUBNET, WIFI_PASSWORD, WIFI_SSID
+from shared.wifi_config import DNS, GATEWAY, IP_2, SUBNET, WIFI_PASSWORD, WIFI_SSID, WIFI_TIMEOUT_SECONDS # noqa
 
 import network
 import webrepl
@@ -17,7 +16,7 @@ def connect_wifi(static: bool = False):
 
     if not wlan.isconnected():
         if static:
-            wlan.ifconfig((IP, SUBNET, GATEWAY, DNS))
+            wlan.ifconfig((IP_2, SUBNET, GATEWAY, DNS))
         wlan.connect(WIFI_SSID, WIFI_PASSWORD)
         deadline = time.ticks_add(time.ticks_ms(), WIFI_TIMEOUT_SECONDS * 1000)
 

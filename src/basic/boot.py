@@ -6,7 +6,7 @@ import time
 import network
 import webrepl
 
-from shared.wifi_config import DNS, GATEWAY, IP_1, SUBNET, WIFI_PASSWORD, WIFI_SSID, WIFI_TIMEOUT_SECONDS
+from shared.wifi_config import (DNS, GATEWAY, IP_1, SUBNET, WIFI_PASSWORD, WIFI_SSID, WIFI_TIMEOUT_SECONDS)
 from shared.webrepl_cfg import PASS as WEBREPL_PASS
 
 webrepl.start(password=WEBREPL_PASS)

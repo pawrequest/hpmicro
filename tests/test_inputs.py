@@ -148,7 +148,7 @@ class PropTests(unittest.TestCase):
         c.valid, c.mode, c.position_deg = True, "position", 90.0
         p.update()
         self.assertGreater(abs(st.rate), 0)  # starts immediately, at full speed
-        self.assertEqual(abs(st.rate), config.SPEED_SPS)
+        self.assertEqual(abs(st.rate), config.MAX_SPEED_SPS)
         _run(p, st, 500)
         self.assertEqual(st.position, round(STEPS_PER_PROP_REV / 4))
         self.assertEqual(st.rate, 0)
@@ -172,7 +172,7 @@ class PropTests(unittest.TestCase):
         c, st, p = self.c, self.st, self.p
         c.valid, c.mode, c.speed = True, "speed", -0.5
         _run(p, st, 10)
-        self.assertAlmostEqual(st.rate, -0.5 * config.SPEED_SPS, delta=1)
+        self.assertAlmostEqual(st.rate, -0.5 * config.MAX_SPEED_SPS, delta=1)
         self.assertLess(st.position, 0)
         c.valid = False
         p.update()

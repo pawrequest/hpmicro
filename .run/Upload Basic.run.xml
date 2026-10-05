@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Upload Basic" type="micropython-tools-configuration-type" factoryName="micropython-tools-upload-configuration">
+    <option name="exclusionsMigrated" value="true" />
+    <option name="migrated" value="true" />
+    <option name="pathMappings">
+      <map>
+        <entry key="C:\prdev\House Party\hpmicro\src\basic" value="/" />
+        <entry key="C:\prdev\House Party\hpmicro\src\shared" value="/shared" />
+      </map>
+    </option>
+    <option name="synchronize" value="true" />
+    <method v="2" />
+  </configuration>
+</component>

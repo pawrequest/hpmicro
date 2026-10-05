@@ -4,7 +4,7 @@ from time import sleep_ms, sleep_us
 import urandom
 from machine import UART, Pin
 
-from config import DMX_BAUDRATE, DMX_TX_ENABLE_PIN, DMX_TX_PIN
+from shared.config import DMX_BAUDRATE, DMX_TX_ENABLE_PIN, DMX_TX_PIN
 
 UART_ID = 1
 FRAME_DELAY_MS = 15
