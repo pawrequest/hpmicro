@@ -42,12 +42,12 @@ machine.Pin = _Pin
 machine.Timer = _Timer
 sys.modules["machine"] = machine
 
-import config
-from command import Command
-from inputs.dmx_input import DmxInput
-from inputs.repl_input import ReplInput
-from prop import Prop
-from stepper import Stepper, STEPS_PER_PROP_REV
+from esp_rx import config
+from esp_rx.command import Command
+from esp_rx.inputs.dmx_input import DmxInput
+from esp_rx.inputs.repl_input import ReplInput
+from esp_rx.prop import Prop
+from esp_rx.stepper import Stepper, STEPS_PER_PROP_REV
 
 
 class FakeDmx:

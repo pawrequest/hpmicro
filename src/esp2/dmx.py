@@ -113,8 +113,8 @@ class DMXReceiver:
 
     def signal_ok(self):
         return (
-            self.frames > 0
-            and ticks_diff(ticks_ms(), self.last_ms) < config.DMX_TIMEOUT_MS
+                self.frames > 0
+                and ticks_diff(ticks_ms(), self.last_ms) < config.DMX_TIMEOUT_MS
         )
 
     def channel(self, offset):

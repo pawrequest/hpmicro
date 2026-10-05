@@ -1,4 +1,4 @@
-from inputs.base import Input
+from esp_rx.inputs.base import Input
 
 # TODO: IR remote. Planned: config.IR_PIN, a key map such as
 #   {KEY_LEFT: ("speed", -0.3), KEY_RIGHT: ("speed", 0.3), KEY_OK: ("stop", 0), KEY_HOME: ("home", 0)}

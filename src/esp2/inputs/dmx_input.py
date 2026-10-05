@@ -1,13 +1,12 @@
-import ramp
-import config
-from inputs.base import Input
+from esp_rx import config, ramp
+from esp_rx.inputs.base import Input
 
 
 class DmxInput(Input):
     def __init__(self, cmd, dmx=None):
         Input.__init__(self, cmd)
         if dmx is None:
-            from dmx import DMXReceiver  # only imported when DMX is selected
+            from esp_rx.dmx import DMXReceiver  # only imported when DMX is selected
 
             dmx = DMXReceiver()
         self.dmx = dmx
@@ -23,7 +22,7 @@ class DmxInput(Input):
         c.mode = ramp.mode_from_dmx(d.channel(config.CH_MODE))
         c.speed = ramp.speed_fraction(value)
         c.position_deg = (
-            ramp.position_fraction(value, d.channel(config.CH_FINE)) * 360.0
+                ramp.position_fraction(value, d.channel(config.CH_FINE)) * 360.0
         )
         c.limit = ramp.limit_fraction(d.channel(config.CH_LIMIT))
         c.valid = True

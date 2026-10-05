@@ -3,7 +3,7 @@ import sys
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-import ramp
+from esp_rx import ramp
 
 
 class RampTests(unittest.TestCase):

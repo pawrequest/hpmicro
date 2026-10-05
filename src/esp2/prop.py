@@ -98,10 +98,10 @@ class Prop:
         if st.rate != 0.0:
             self._idle_since = ticks_ms()
         elif (
-            config.DISABLE_AFTER_IDLE_S is not None
-            and st.enabled
-            and ticks_diff(ticks_ms(), self._idle_since)
-            > config.DISABLE_AFTER_IDLE_S * 1000
+                config.DISABLE_AFTER_IDLE_S is not None
+                and st.enabled
+                and ticks_diff(ticks_ms(), self._idle_since)
+                > config.DISABLE_AFTER_IDLE_S * 1000
         ):
             st.enable(False)
 
