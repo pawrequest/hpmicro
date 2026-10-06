@@ -7,14 +7,14 @@ application reads `state` and acts, keeping this module testable on a desktop.
 import time
 
 try:
-    from . import protocol as p  # package layout (desktop / tests)
-except ImportError:
+    from shared import dmx_util as p
+except (ImportError, ValueError):
     import protocol as p  # flat layout on the device
 
 SIGNAL_TIMEOUT_MS = 500
 
 
-class State:
+class DmxState:
     __slots__ = ('mode', 'level', 'valid', '_last_ms')
 
     def __init__(self):

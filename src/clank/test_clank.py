@@ -3,17 +3,18 @@
 import time
 import unittest
 
-from . import device, protocol as p
-from .host import Command
+from shared import dmx_util as p
+from clank.esp import dmx_state
+from clank.pc.host import DmxCommand
 
 
 class RoundTrip(unittest.TestCase):
     def test_roundtrip_with_offset(self):
-        cmd = Command(mode=p.MODE_RUN, level=1.0)
+        cmd = DmxCommand(mode=p.MODE_RUN, level=1.0)
         frame = cmd.to_frame(base=9)
         self.assertEqual(frame[9 + p.CH_MODE], p.MODE_RUN)
         self.assertEqual(frame[9 + p.CH_LEVEL], 255)
-        self.assertEqual(Command.from_frame(frame, base=9), cmd)
+        self.assertEqual(DmxCommand.from_frame(frame, base=9), cmd)
 
     def test_unknown_mode_fails_safe(self):
         self.assertEqual(p.decode_mode(101), p.MODE_STOP)
@@ -24,7 +25,7 @@ class RoundTrip(unittest.TestCase):
 
     def test_footprint_must_fit(self):
         with self.assertRaises(ValueError):
-            Command().write_into(bytearray(1))
+            DmxCommand().write_into(bytearray(1))
 
 
 class DeviceState(unittest.TestCase):
@@ -34,11 +35,11 @@ class DeviceState(unittest.TestCase):
         time.ticks_diff = lambda a, b: a - b
 
     def test_update_and_timeout(self):
-        s = device.State()
-        s.update(Command(p.MODE_RUN, 1.0).to_frame())
+        s = dmx_state.DmxState()
+        s.update(DmxCommand(p.MODE_RUN, 1.0).to_frame())
         self.assertTrue(s.valid)
         self.assertEqual(s.mode, p.MODE_RUN)
-        s._last_ms -= device.SIGNAL_TIMEOUT_MS + 1
+        s._last_ms -= dmx_state.SIGNAL_TIMEOUT_MS + 1
         s.check_timeout()
         self.assertFalse(s.valid)
         self.assertEqual(s.mode, p.MODE_STOP)

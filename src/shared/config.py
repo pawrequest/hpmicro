@@ -9,10 +9,10 @@ DMX_RX_PIN = 15
 DMX_RX_ENABLE_PIN = 16  # active low
 DMX_TX_PIN = 18
 DMX_TX_ENABLE_PIN = 17  # active high
-COM_PORT = "COM10"
+COM_PORT = "COM8"
 # BUTTON_PIN = 13
 LED_PIN = None  # optional status LED (plain GPIO)
-
+ESP_RGB_LED_PIN = 48
 
 # button
 BUTTON_DEBOUNCE_MS = 200

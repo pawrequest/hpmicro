@@ -12,6 +12,38 @@ DMX_TIMEOUT = const(
 
 
 class DMX:
+
+    def __init__(self, address, channels, rx_pin=1, de_re_pin=None):
+        self.dmxrx_base = address + 1
+        self.dmx_endchannel = self.dmxrx_base + channels
+        self.dmxrx_timer = time.ticks_ms()
+        self.dmx_buff = bytearray()
+        self.char_counter = 0
+        self.dmx_offlinetimer = 0
+        self.dmx_packet_length = 0
+        self.dmxrx_list = []
+        self.new_packet = False
+        self.callbackupdate = None
+        self.callbackstatus = None
+        self.loops = 0
+        self._setdmxstatus(2, True)  # By Default we are online
+        print(
+            f"INFO: Setting up DMX512 Rx on Channels {self.dmxrx_base - 1}-{self.dmx_endchannel - 2} ...  ",
+            end="",
+        )
+        if de_re_pin is not None:
+            self.de_re = machine.Pin(
+                de_re_pin, machine.Pin.OUT, value=0
+            )  # low = receive mode
+        dmx_rx_pin = machine.Pin(rx_pin)
+        self.dmx_rx = machine.UART(
+            1, baudrate=DMX_BAUD, rx=dmx_rx_pin, bits=8, parity=None, stop=2
+        )
+        self.timer_1second = machine.Timer(
+            period=1000, mode=machine.Timer.PERIODIC, callback=self.secondcounter
+        )
+        print("Done.")
+
     def set_updatefunction(self, function=None):
         """Set the function in the main program to call when our data is updated"""
         self.callbackupdate = function
@@ -57,7 +89,7 @@ class DMX:
         elif self.dmx_status:
             # Every 1 second - print out some basic info to show we are running
             print(
-                f"INFO: DMXpps={self.char_counter} Loops={self.loops} Ch={self.dmxrx_list} TotalCh={self.dmx_packet_length}"
+                f"INFO: {self.char_counter=} {self.loops} {self.dmxrx_list=} {self.dmx_packet_length=}"
             )
         if self.dmx_offlinetimer >= DMX_TIMEOUT:
             # Ensures a safe/default mode is called every DMX_TIMEOUT seconds if offline
@@ -75,15 +107,13 @@ class DMX:
         if time.ticks_diff(time.ticks_ms(), self.dmxrx_timer) > DMX_RXTIMEOUT:
             self.dmxrx_timer = time.ticks_ms()
             if (
-                len(self.dmx_buff) >= self.dmx_endchannel
-                and self.dmx_buff[0] == 0
-                and self.new_packet
+                    len(self.dmx_buff) >= self.dmx_endchannel
+                    and self.dmx_buff[0] == 0
+                    and self.new_packet
             ):  # and self.dmx_buff[1] == 0
                 self.char_counter += 1  # Counts valid packets received (per second).
-                # self.dmxrx_list = list(self.dmx_buff[self.dmxrx_base-1:self.dmx_endchannel-1])  # Make a new list with just the channels we care about
-                self.dmxrx_list = list(
-                    self.dmx_buff[self.dmxrx_base : self.dmx_endchannel]
-                )  # Make a new list with just the channels we care about
+                # Make a new list with just the channels we care about
+                self.dmxrx_list = list(self.dmx_buff[self.dmxrx_base: self.dmx_endchannel])
                 if self.callbackupdate:
                     self.callbackupdate(self.dmxrx_list)
                 self.new_packet = False
@@ -95,34 +125,3 @@ class DMX:
             self.dmx_buff = b""  # using bytearray() is a lot slower!
         self.loops += 1
         return self.dmx_status
-
-    def __init__(self, address, channels, rx_pin=1, de_re_pin=None):
-        self.dmxrx_base = address + 1
-        self.dmx_endchannel = self.dmxrx_base + channels
-        self.dmxrx_timer = time.ticks_ms()
-        self.dmx_buff = bytearray()
-        self.char_counter = 0
-        self.dmx_offlinetimer = 0
-        self.dmx_packet_length = 0
-        self.dmxrx_list = []
-        self.new_packet = False
-        self.callbackupdate = None
-        self.callbackstatus = None
-        self.loops = 0
-        self._setdmxstatus(2, True)  # By Default we are online
-        print(
-            f"INFO: Setting up DMX512 Rx on Channels {self.dmxrx_base - 1}-{self.dmx_endchannel - 2} ...  ",
-            end="",
-        )
-        if de_re_pin is not None:
-            self.de_re = machine.Pin(
-                de_re_pin, machine.Pin.OUT, value=0
-            )  # low = receive mode
-        dmx_rx_pin = machine.Pin(rx_pin)
-        self.dmx_rx = machine.UART(
-            1, baudrate=DMX_BAUD, rx=dmx_rx_pin, bits=8, parity=None, stop=2
-        )
-        self.timer_1second = machine.Timer(
-            period=1000, mode=machine.Timer.PERIODIC, callback=self.secondcounter
-        )
-        print("Done.")
