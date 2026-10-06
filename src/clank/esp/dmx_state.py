@@ -15,11 +15,12 @@ SIGNAL_TIMEOUT_MS = 500
 
 
 class DmxState:
-    __slots__ = ('mode', 'level', 'valid', '_last_ms')
+    __slots__ = ('mode', 'level', 'r', 'g', 'b', 'valid', '_last_ms')
 
     def __init__(self):
         self.mode = dmx_util.MODE_STOP
         self.level = 0.0
+        self.r = self.g = self.b = 0
         self.valid = False  # False => no recent frame; act as stopped
         self._last_ms = 0
 
@@ -27,6 +28,9 @@ class DmxState:
         """Decode `frame` (bytes-like) in place; no allocation beyond float boxing."""
         self.mode = dmx_util.decode_mode(frame[base + dmx_util.CH_MODE])
         self.level = dmx_util.decode_level(frame[base + dmx_util.CH_LEVEL])
+        self.r = frame[base + dmx_util.CH_RED]
+        self.g = frame[base + dmx_util.CH_GREEN]
+        self.b = frame[base + dmx_util.CH_BLUE]
         self.valid = True
         self._last_ms = time.ticks_ms()
 

@@ -7,7 +7,10 @@ Channel table (offsets relative to the device's DMX start address):
 
     offset  name      encoding
     0       CH_MODE   MODE_* value
-    1       CH_LEVEL  0..255 -> 0.0..1.0
+    1       CH_LEVEL  0..255 -> 0.0..1.0 (master brightness)
+    2       CH_RED    0..255
+    3       CH_GREEN  0..255
+    4       CH_BLUE   0..255
 
 PLACEHOLDER content: replace channels as the real design firms up.
 """
@@ -23,7 +26,10 @@ except ImportError:
 # Channel offsets
 CH_MODE = const(0)
 CH_LEVEL = const(1)
-FOOTPRINT = const(2)  # number of channels used
+CH_RED = const(2)
+CH_GREEN = const(3)
+CH_BLUE = const(4)
+FOOTPRINT = const(5)  # number of channels used
 
 # CH_MODE values (spaced apart so small DMX jitter can't flip a mode)
 MODE_STOP = const(0)
