@@ -41,7 +41,7 @@ def send_dmx_frame(red, green, blue):
         set_transmit_enabled(True)
         try:
             uart.init(baudrate=9600, bits=8, parity=None, stop=2, tx=tx)
-            uart.write(b"\x00")
+            uart.write(b'\x00')
             sleep_us(1300)
 
             uart.init(baudrate=DMX_BAUDRATE, bits=8, parity=None, stop=2, tx=tx)
@@ -75,8 +75,7 @@ def effect_fade(colors, steps=256, delay_ms=FRAME_DELAY_MS):
     for start, end in zip(colors, colors[1:] + colors[:1]):
         for step in range(steps):
             color = tuple(
-                start[channel] + (end[channel] - start[channel]) * step // (steps - 1)
-                for channel in range(3)
+                start[channel] + (end[channel] - start[channel]) * step // (steps - 1) for channel in range(3)
             )
             send_dmx_frame(*color)
             if not _pause(delay_ms):

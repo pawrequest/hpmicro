@@ -1,7 +1,8 @@
-from time import ticks_ms, ticks_diff
+from time import ticks_diff, ticks_ms
+
+from esp_rx.inputs.base import Input
 
 from esp_rx import config
-from esp_rx.inputs.base import Input
 
 
 class ReplInput(Input):

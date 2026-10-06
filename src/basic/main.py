@@ -1,6 +1,4 @@
-import time
-
-print('main')
+print("main")
 
 # time.sleep(3)
 #

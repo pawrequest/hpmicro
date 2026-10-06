@@ -1,6 +1,5 @@
-from machine import Pin
-
 import config
+from machine import Pin
 
 
 class LimitSwitch:

@@ -9,7 +9,7 @@ DMX_RX_PIN = 15
 DMX_RX_ENABLE_PIN = 16  # active low
 DMX_TX_PIN = 18
 DMX_TX_ENABLE_PIN = 17  # active high
-COM_PORT = 'COM10'
+COM_PORT = "COM10"
 # BUTTON_PIN = 13
 LED_PIN = None  # optional status LED (plain GPIO)
 
@@ -28,7 +28,9 @@ PROP_STEPS_PER_REV = MICROSTEPS_REV * GEARBOX_MODIFIER
 
 # ---- Motion (stepper_1 runs at a constant speed, no ramps) ----
 MAX_SPEED_RPM = 30.0  # prop RPM at full speed
-MAX_SPEED_SPS = round(MAX_SPEED_RPM / 60.0 * PROP_STEPS_PER_REV)  # steps/s at full speed (used by stepper_1)
+MAX_SPEED_SPS = round(
+    MAX_SPEED_RPM / 60.0 * PROP_STEPS_PER_REV
+)  # steps/s at full speed (used by stepper_1)
 MIN_STEP_HZ = 50  # speeds below this are treated as stop
 STEP_TIMER_ID = -1  # machine.Timer id passed to stepper_1 (-1 = virtual timer)
 POSITION_SHORTEST_PATH = (
@@ -86,5 +88,4 @@ REQUIRE_HOMED = False  # refuse position mode until homed
 
 # ---- Misc ----
 CONTROL_PERIOD_MS = 10
-LOG_AUTO = False           # True: log automatically (only when valid/mode/homed change). False: opt-in via log() / status()
-
+LOG_AUTO = False  # True: log automatically (only when valid/mode/homed change). False: opt-in via log() / status()

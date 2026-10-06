@@ -42,12 +42,13 @@ machine.Pin = _Pin
 machine.Timer = _Timer
 sys.modules["machine"] = machine
 
-from esp_rx import config
 from esp_rx.command import Command
 from esp_rx.inputs.dmx_input import DmxInput
 from esp_rx.inputs.repl_input import ReplInput
 from esp_rx.prop import Prop
-from esp_rx.stepper import Stepper, STEPS_PER_PROP_REV
+from esp_rx.stepper import STEPS_PER_PROP_REV, Stepper
+
+from esp_rx import config
 
 
 class FakeDmx:
@@ -178,6 +179,7 @@ class PropTests(unittest.TestCase):
         p.update()
         self.assertEqual(st.rate, 0)
         self.assertEqual(p.mode, "lost")
+
 
 if __name__ == "__main__":
     unittest.main()

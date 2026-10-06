@@ -12,8 +12,10 @@ from shared.config import (
     ENABLE_PIN,
     GEARBOX_MODIFIER,
     INVERT_DIR,
-    MAX_SPEED_SPS, MICROSTEPS_REV,
-    STEP_PIN, STEP_TIMER_ID,
+    MAX_SPEED_SPS,
+    MICROSTEPS_REV,
+    STEP_PIN,
+    STEP_TIMER_ID,
 )
 
 
@@ -63,11 +65,11 @@ class StepperRedox:
         self.speed(rps * self.steps_per_rev)
 
     def target(self, t):
-        print(f'targeting {t} steps')
+        print(f"targeting {t} steps")
         self.target_pos = t
 
     def target_deg(self, deg):
-        print(f'moving {deg=}')
+        print(f"moving {deg=}")
         self.target(self.steps_per_rev * deg / 360.0)
 
     def target_rad(self, rad):

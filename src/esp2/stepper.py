@@ -1,6 +1,6 @@
-from shared import config
-
 from stepper_redox import StepperRedox
+
+from shared import config
 
 STEPS_PER_PROP_REV = config.PROP_STEPS_PER_REV
 
@@ -41,10 +41,10 @@ class Stepper:
         cur = self.s.steps_per_sec
         return abs(cur - sps) <= max(5, 0.05 * cur)
 
-    def goto_steps(self, target, sps):
+    def goto_steps(self, target: float, sps):
         """Track an absolute step target at sps steps/s (stepper_1 track_target mode)."""
         s = self.s
-        target = int(round(target))
+        # target = round(target)
         if target == s.pos:
             self.stop()
             return

@@ -15,7 +15,6 @@ import random
 import time
 
 import serial
-
 from config import BREAK_BAUDRATE, DMX_BAUDRATE, FRAME_DELAY_S, PORT
 
 
@@ -26,7 +25,7 @@ def send_dmx_frame(ser, red, green, blue):
     # Break: hold the line low longer than a normal byte by sending a
     # null byte at a much slower baud rate.
     ser.baudrate = BREAK_BAUDRATE
-    ser.write(b"\x00")
+    ser.write(b'\x00')
     ser.flush()
 
     # Mark-after-break + the actual DMX data at full speed.
@@ -47,12 +46,11 @@ def send_dmx_frame(ser, red, green, blue):
 
 def effect_fade(ser, colors, steps=256, delay_s=FRAME_DELAY_S):
     """Fade smoothly between the colors, then loop back to the first."""
-    print("Effect fade")
+    print('Effect fade')
     for start, end in zip(colors, colors[1:] + colors[:1]):
         for step in range(steps):
             color = tuple(
-                start[channel] + (end[channel] - start[channel]) * step // (steps - 1)
-                for channel in range(3)
+                start[channel] + (end[channel] - start[channel]) * step // (steps - 1) for channel in range(3)
             )
             send_dmx_frame(ser, *color)
             time.sleep(delay_s)
@@ -60,7 +58,7 @@ def effect_fade(ser, colors, steps=256, delay_s=FRAME_DELAY_S):
 
 def effect_color_hold(ser, colors, hold_s=0.7):
     """Show each color at full intensity for a fixed interval."""
-    print("Effect color hold")
+    print('Effect color hold')
     for color in colors:
         send_dmx_frame(ser, *color)
         time.sleep(hold_s)
@@ -68,7 +66,7 @@ def effect_color_hold(ser, colors, hold_s=0.7):
 
 def effect_pulse(ser, color, steps=100, delay_s=0.01):
     """Fade one color up to full brightness and back down."""
-    print("Effect pulse")
+    print('Effect pulse')
     for brightness in range(steps + 1):
         level = brightness * 255 // steps
         send_dmx_frame(ser, *(channel * level // 255 for channel in color))
@@ -82,7 +80,7 @@ def effect_pulse(ser, color, steps=100, delay_s=0.01):
 
 def effect_random_colors(ser, count=20, hold_s=0.35):
     """Jump between randomly chosen RGB colors."""
-    print("Effect random colors")
+    print('Effect random colors')
     for _ in range(count):
         color = tuple(random.getrandbits(8) for _ in range(3))
         send_dmx_frame(ser, *color)
@@ -102,7 +100,7 @@ palette = (
 
 def demo(ser):
     """Loop the same effects sequence as dmx_demo.py's background worker."""
-    print("Effect demo")
+    print('Effect demo')
     while True:
         effect_random_colors(ser)
         effect_pulse(ser, (255, 40, 0))
@@ -110,7 +108,7 @@ def demo(ser):
         effect_color_hold(ser, ((255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255)))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     with serial.Serial(
         PORT,
         DMX_BAUDRATE,

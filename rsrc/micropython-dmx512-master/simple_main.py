@@ -1,10 +1,11 @@
-#STANDARD VERSION - Simple LED Output of a single color on a single APA102 LED string
-from micropython import alloc_emergency_exception_buf
+# STANDARD VERSION - Simple LED Output of a single color on a single APA102 LED string
 import gc
-import apa102_thread
-import dmx512_rx
-import config
 import time
+
+import apa102_thread
+import config
+import dmx512_rx
+from micropython import alloc_emergency_exception_buf
 
 # Get Our Configuration
 dmxrx_deviceaddress = config.dmx_address  # Our device Base DMX Address
@@ -15,9 +16,11 @@ apa102_numleds = config.apa102_numleds
 gc.threshold(16384)  # Run Garbage collection everytime 16KB is allocated
 alloc_emergency_exception_buf(512)  # Allocate Emergency Exception Buffer
 
+
 def update_apa102_simple(grgbw_list):
     global_bright = int(grgbw_list[0] / 8)  # Valid 1-31, 0 = disable
     pixels.customwrite(global_bright, grgbw_list[1], grgbw_list[3], grgbw_list[2], 1, 3)
+
 
 def update_apa102_complex(grgbw_list):
     # First String
@@ -33,10 +36,12 @@ def update_apa102_complex(grgbw_list):
         global_bright = int(grgbw_list[8] / 8)  # Valid 1-31, 0 = disable
         pixels.customwrite(global_bright, grgbw_list[9], grgbw_list[11], grgbw_list[10], 3, 3)
 
+
 def dmxstatuschange(status):
-    if status == 0: # We are offline & timed-out
-        print("Turning off LED Output")
+    if status == 0:  # We are offline & timed-out
+        print('Turning off LED Output')
         pixels.clear()
+
 
 # Configuring Modules - LED Outputs
 pixels = apa102_thread.PIXELS(apa102_numleds, 18, 19)
@@ -48,7 +53,7 @@ dmx.set_updatefunction(update_apa102_simple)
 
 pixels.fullrainbow_init(2)  # Setup fallback Default if no DMX is received
 fullrainbow_refresh_ms = time.ticks_ms() + 20  # 50 Rainbow updates/second (1/20ms)
-print("INFO: Starting Main Loop")
+print('INFO: Starting Main Loop')
 while True:
     if dmx.loop() == 0:  # If 0 we have been offline for an extended period
         if fullrainbow_refresh_ms < time.ticks_ms():
@@ -56,5 +61,3 @@ while True:
             pixels.fullrainbow_timer()
             rgb = pixels.fullrainbow_get()
             pixels.globalwrite(30, rgb[0], rgb[2], rgb[1])
-
-

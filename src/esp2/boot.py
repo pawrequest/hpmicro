@@ -3,11 +3,17 @@
 # esp.osdebug(None)
 import time
 
-from shared.wifi_config import DNS, GATEWAY, IP_2, SUBNET, WIFI_PASSWORD, WIFI_SSID, WIFI_TIMEOUT_SECONDS # noqa
-
 import network
 import webrepl
-
+from shared.wifi_config import (
+    DNS,
+    GATEWAY,
+    IP_2,
+    SUBNET,
+    WIFI_PASSWORD,
+    WIFI_SSID,
+    WIFI_TIMEOUT_SECONDS,
+)
 
 
 def connect_wifi(static: bool = False):

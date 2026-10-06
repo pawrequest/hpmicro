@@ -6,10 +6,10 @@ DMX_BREAK_MIN_US is a BREAK; at its end we record the absolute stream position
 byte stream at those positions, so alignment is exact regardless of task latency.
 """
 
-from machine import UART, Pin
-from time import ticks_us, ticks_diff, ticks_ms
+from time import ticks_diff, ticks_ms, ticks_us
 
 import config
+from machine import UART, Pin
 
 _MASK = 0xFFFFFF
 _HALF = 0x800000
@@ -61,8 +61,7 @@ class DMXReceiver:
         if not self._synced or m <= 0:
             return
         room = 513 + self._skip - self._n
-        if m > room:
-            m = room
+        m = min(m, room)
         if m > 0:
             self._acc_mv[self._n : self._n + m] = self._chunk_mv[off : off + m]
             self._n += m
@@ -112,10 +111,7 @@ class DMXReceiver:
                 return
 
     def signal_ok(self):
-        return (
-                self.frames > 0
-                and ticks_diff(ticks_ms(), self.last_ms) < config.DMX_TIMEOUT_MS
-        )
+        return self.frames > 0 and ticks_diff(ticks_ms(), self.last_ms) < config.DMX_TIMEOUT_MS
 
     def channel(self, offset):
         i = config.DMX_ADDRESS - 1 + offset

@@ -4,14 +4,14 @@ REPL globals: inp (selected input; `ctl` alias for webrepl), prop, stepper, star
 """
 
 import _thread
-from machine import Pin
-from time import ticks_us, ticks_diff, sleep_ms
+from time import sleep_ms, ticks_diff, ticks_us
 
 import config
 from command import Command
-from stepper import Stepper
 from limit import LimitSwitch
+from machine import Pin
 from prop import Prop
+from stepper import Stepper
 
 cmd = Command()
 
@@ -40,17 +40,23 @@ if ctl is not None:
     ctl.prop = prop
 
 _led = Pin(config.LED_PIN, Pin.OUT) if config.LED_PIN is not None else None
-_st = {"stop": False, "running": False, "last": 0, "n": 0, "logging": config.LOG_AUTO, "seen": None}
+_st = {
+    "stop": False,
+    "running": False,
+    "last": 0,
+    "n": 0,
+    "logging": config.LOG_AUTO,
+    "seen": None,
+}
 _timer = None
 
 
 def _status_line():
     extra = ""
     dmx = getattr(inp, "dmx", None)
-    if dmx is not None:
-        extra = " frames=%d bad=%d" % (dmx.frames, dmx.bad_frames)
-    return "input=%s valid=%s mode=%s angle=%.1f rate=%d homed=%s%s" % (
-        config.INPUT, cmd.valid, prop.mode, prop.angle_deg(), prop.stepper.rate, prop.homed, extra)
+    if dmx is not None and hasattr(dmx, "frames") and hasattr(dmx, "bad_frames"):
+        extra = f" frames={dmx.frames} bad={dmx.bad_frames}"
+    return f"input={config.INPUT} valid={cmd.valid} mode={prop.mode} angle={prop.angle_deg():.1f} rate={prop.stepper.rate:d} homed={prop.homed}{extra}"
 
 
 def status():

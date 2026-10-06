@@ -4,11 +4,12 @@ Motion is constant-speed (stepper_1 has no ramps): the desired mode/speed/target
 applied to the stepper only when it changes, so the step timer is left alone otherwise.
 """
 
-from time import ticks_ms, ticks_diff
+from time import ticks_diff, ticks_ms
 
-from shared import config
 import ramp
 from stepper import STEPS_PER_PROP_REV
+
+from shared import config
 
 _REV = STEPS_PER_PROP_REV
 _MAX_SPS = config.MAX_SPEED_SPS
@@ -98,10 +99,10 @@ class Prop:
         if st.rate != 0.0:
             self._idle_since = ticks_ms()
         elif (
-                config.DISABLE_AFTER_IDLE_S is not None
-                and st.enabled
-                and ticks_diff(ticks_ms(), self._idle_since)
-                > config.DISABLE_AFTER_IDLE_S * 1000
+            config.DISABLE_AFTER_IDLE_S is not None
+            and st.enabled
+            and ticks_diff(ticks_ms(), self._idle_since)
+            > config.DISABLE_AFTER_IDLE_S * 1000
         ):
             st.enable(False)
 

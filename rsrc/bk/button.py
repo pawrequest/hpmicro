@@ -6,7 +6,6 @@ import time
 
 import machine
 import micropython
-
 from config import BUTTON_DEBOUNCE_MS, BUTTON_PIN
 
 micropython.alloc_emergency_exception_buf(100)

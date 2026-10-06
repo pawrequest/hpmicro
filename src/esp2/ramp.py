@@ -17,8 +17,7 @@ def slew(cur, tgt, accel, dt):
 def approach_velocity(remaining, vmax, accel):
     """Signed velocity that lets us brake to a stop exactly at the target."""
     mag = sqrt(2.0 * accel * 0.9 * abs(remaining))
-    if mag > vmax:
-        mag = vmax
+    mag = min(mag, vmax)
     return mag if remaining >= 0 else -mag
 
 

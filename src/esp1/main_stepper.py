@@ -1,7 +1,8 @@
 import time
 
-from shared.config import DIR_PIN, MAX_SPEED_SPS, MICROSTEPS_REV, STEP_PIN
 from stepper_redox import StepperRedox
+
+from shared.config import DIR_PIN, MAX_SPEED_SPS, MICROSTEPS_REV, STEP_PIN
 
 
 def get_step() -> StepperRedox:
@@ -44,5 +45,6 @@ def on_button_press():
     print("button pressed")
     print(f"rotating {90} degrees")
     st.target_deg(st.get_pos_deg() + 90)
+
 
 # button = Button(on_button_press)
