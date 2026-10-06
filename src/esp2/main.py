@@ -6,7 +6,7 @@ REPL globals: inp (selected input; `ctl` alias for webrepl), prop, stepper, star
 import _thread
 from time import sleep_ms, ticks_diff, ticks_us
 
-import config
+from shared import config
 from command import Command
 from limit import LimitSwitch
 from machine import Pin

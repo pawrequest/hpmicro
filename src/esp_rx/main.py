@@ -1,9 +1,10 @@
 import gc
+from pprint import pprint
+
+from micropython import alloc_emergency_exception_buf
 
 import dmx512_rx_pr
 import simple_config
-from micropython import alloc_emergency_exception_buf
-
 from shared.config import DMX_RX_ENABLE_PIN, DMX_RX_PIN
 
 # Environment Setup
@@ -11,8 +12,19 @@ gc.threshold(16384)  # Run Garbage collection everytime 16KB is allocated
 alloc_emergency_exception_buf(512)  # Allocate Emergency Exception Buffer
 
 
-def printer(grgbw_list):
-    print("received dmx data", grgbw_list)
+def parse_dmx_data(dmx_data):
+    if not all(isinstance(x, int) for x in dmx_data):
+        raise ValueError("All elements in dmx_data must be integers")
+    match dmx_data:
+        case a, b, c:
+            ...
+        case _:
+            pass
+
+
+def printer(dmx_data):
+    pprint(dmx_data)
+    print(f"{type(dmx_data)=}")
 
 
 def dmxstatuschange(status):
