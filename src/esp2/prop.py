@@ -6,12 +6,12 @@ applied to the stepper only when it changes, so the step timer is left alone oth
 
 from time import ticks_ms, ticks_diff
 
-import config
+from shared import config
 import ramp
 from stepper import STEPS_PER_PROP_REV
 
 _REV = STEPS_PER_PROP_REV
-_MAX_SPS = config.SPEED_SPS
+_MAX_SPS = config.MAX_SPEED_SPS
 _HOME_SPS = config.HOME_SPEED_RPM / 60.0 * _REV
 _HOME_OFFSET = config.HOME_OFFSET_DEG / 360.0 * _REV
 

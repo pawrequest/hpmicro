@@ -1,21 +1,13 @@
-"""Thin adapter over stepper_1.Stepper (known-good timer/step-counting driver).
+from shared import config
 
-stepper_1 does all the moving. This wrapper only:
-- stops stepper_1's timer when idle (stepper_1 keeps it running, firing no-op callbacks),
-- only (re)starts the timer when the direction/speed/target really changes, because every
-  timer re-init is expensive and makes the motion jerky,
-- avoids stepper_1.target(), which prints on every call.
-"""
-
-import config
-import stepper_1
+from stepper_redox import StepperRedox
 
 STEPS_PER_PROP_REV = config.PROP_STEPS_PER_REV
 
 
 class Stepper:
     def __init__(self):
-        self.s = stepper_1.Stepper()
+        self.s = StepperRedox()
         self.s.stop()  # stepper_1.__init__ starts tracking immediately
 
     @property

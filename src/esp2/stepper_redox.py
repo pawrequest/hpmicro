@@ -7,27 +7,26 @@ import time
 
 import machine
 
-from config import (
+from shared.config import (
     DIR_PIN,
     ENABLE_PIN,
     GEARBOX_MODIFIER,
     INVERT_DIR,
-    MICROSTEPS_REV,
-    SPEED_SPS,
-    STEP_PIN,
+    MAX_SPEED_SPS, MICROSTEPS_REV,
+    STEP_PIN, STEP_TIMER_ID,
 )
 
 
-class Stepper:
+class StepperRedox:
     def __init__(
         self,
         step_pin=STEP_PIN,
         dir_pin=DIR_PIN,
         en_pin=ENABLE_PIN,
         steps_per_rev=MICROSTEPS_REV,
-        speed_sps=SPEED_SPS,
+        speed_sps=MAX_SPEED_SPS,
         invert_dir=INVERT_DIR,
-        timer_id=-1,
+        timer_id=STEP_TIMER_ID,
         gearbox_modifier: float = GEARBOX_MODIFIER,
     ):
         if not isinstance(step_pin, machine.Pin):
