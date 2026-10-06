@@ -41,20 +41,20 @@ class LayoutTest(unittest.TestCase):
 
     def test_footprint_must_fit(self):
         with self.assertRaises(ValueError):
-            p.LAYOUT.encode({}, bytearray(1))
+            p.RGB_LAYOUT.encode({}, bytearray(1))
 
 
 class CommandTest(unittest.TestCase):
     def test_roundtrip_with_offset(self):
-        cmd = Command(p.LAYOUT, mode=p.MODE_RUN, level=1.0, r=7)
+        cmd = Command(p.RGB_LAYOUT, mode=p.MODE_RUN, level=1.0, r=7)
         frame = cmd.to_frame(base=9)
-        self.assertEqual(frame[9 + p.LAYOUT.offset('mode')], p.MODE_RUN)
-        self.assertEqual(frame[9 + p.LAYOUT.offset('level')], 255)
-        self.assertEqual(Command.from_frame(p.LAYOUT, frame, base=9), cmd)
+        self.assertEqual(frame[9 + p.RGB_LAYOUT.offset('mode')], p.MODE_RUN)
+        self.assertEqual(frame[9 + p.RGB_LAYOUT.offset('level')], 255)
+        self.assertEqual(Command.from_frame(p.RGB_LAYOUT, frame, base=9), cmd)
 
     def test_unknown_channel_rejected(self):
         with self.assertRaises(KeyError):
-            Command(p.LAYOUT).nope = 1
+            Command(p.RGB_LAYOUT).nope = 1
 
 
 class DeviceTest(unittest.TestCase):
@@ -64,11 +64,11 @@ class DeviceTest(unittest.TestCase):
         time.ticks_diff = lambda a, b: a - b
 
     def test_dispatch_and_timeout(self):
-        d = DmxDevice(p.LAYOUT)
+        d = DmxDevice(p.RGB_LAYOUT)
         seen, anys = [], []
         d.watch('r', seen.append)
         d.on_change(lambda v: anys.append(dict(v)))
-        frame = Command(p.LAYOUT, mode=p.MODE_RUN, level=1.0, r=5).to_frame()
+        frame = Command(p.RGB_LAYOUT, mode=p.MODE_RUN, level=1.0, r=5).to_frame()
         d.update(frame)
         d.update(frame)  # unchanged: no extra dispatch
         self.assertTrue(d.valid)
@@ -84,7 +84,7 @@ class DeviceTest(unittest.TestCase):
 
     def test_watch_unknown_name(self):
         with self.assertRaises(KeyError):
-            DmxDevice(p.LAYOUT).watch('nope', print)
+            DmxDevice(p.RGB_LAYOUT).watch('nope', print)
 
 
 if __name__ == '__main__':

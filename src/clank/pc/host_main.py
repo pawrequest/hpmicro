@@ -8,7 +8,6 @@ Run from the `src` directory:
 """
 
 import argparse
-import colorsys
 import math
 import time
 from argparse import Namespace
@@ -28,11 +27,6 @@ def demo_level(t: float) -> float:
     return abs(math.sin(math.pi * t / DEMO_PERIOD_S))
 
 
-def hue_rgb(h: float) -> tuple[int, int, int]:
-    r, g, b = colorsys.hsv_to_rgb(h % 1.0, 1.0, 1.0)
-    return round(r * 255), round(g * 255), round(b * 255)
-
-
 def main() -> None:
     # args = parse_args()
 
@@ -49,7 +43,7 @@ def main() -> None:
                 cmd.mode = dmx_util.MODE_RUN
                 t = time.monotonic() - start
                 cmd.level = 1.0
-                cmd.r, cmd.g, cmd.b = hue_rgb(t / COLOUR_CYCLE_S)
+                cmd.hue = (t / COLOUR_CYCLE_S) % 1.0
             cmd.write_into(dmx.data, DMX_ADDRESS)
             dmx.send()
             time.sleep(FRAME_INTERVAL)
