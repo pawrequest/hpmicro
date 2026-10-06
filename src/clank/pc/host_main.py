@@ -17,7 +17,7 @@ from shared.config import COM_PORT, DMX_ADDRESS
 
 from shared import dmx_util as dmx_util
 from clank.pc.dmx_usb_tx import FRAME_INTERVAL, Dmx
-from clank.pc.host import DmxCommand
+from clank.pc.host import Command
 
 MODES = {'stop': dmx_util.MODE_STOP, 'run': dmx_util.MODE_RUN}
 DEMO_PERIOD_S = 4.0
@@ -36,7 +36,7 @@ def hue_rgb(h: float) -> tuple[int, int, int]:
 def main() -> None:
     # args = parse_args()
 
-    cmd = DmxCommand(mode=1, level=69)
+    cmd = Command(dmx_util.LAYOUT)
     dmx = Dmx(COM_PORT)
     start = time.monotonic()
     channel = 1
@@ -56,7 +56,7 @@ def main() -> None:
     except KeyboardInterrupt:
         pass
     finally:
-        DmxCommand(mode=dmx_util.MODE_STOP).write_into(dmx.data, DMX_ADDRESS)
+        Command(dmx_util.LAYOUT, mode=dmx_util.MODE_STOP).write_into(dmx.data, DMX_ADDRESS)
         dmx.send()  # leave the receiver in a safe state
         dmx.close()
 

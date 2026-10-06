@@ -1,29 +1,48 @@
-"""Laptop (CPython) side: typed command model -> DMX frame. Not deployed to the device."""
+"""Laptop (CPython) side: layout-validated command -> DMX frame. Not deployed to the device."""
 
-from dataclasses import dataclass
-
-from shared import dmx_util
+from shared.dmx_layout import Layout
 
 DMX_UNIVERSE_SIZE = 512
 
 
-@dataclass(slots=True)
-class DmxCommand:
-    mode: int = 1
-    level: float = 0.0  # 0..1
-    r: int = 0
-    g: int = 0
-    b: int = 0
+class Command:
+    """Mutable name->value mapping validated against a Layout.
+
+    cmd = Command(LAYOUT, mode=MODE_RUN, r=255);  cmd['level'] = 0.5
+    """
+
+    def __init__(self, layout: Layout, **values):
+        object.__setattr__(self, 'layout', layout)
+        object.__setattr__(self, 'values', layout.defaults())
+        self.update(**values)
+
+    def update(self, **values) -> None:
+        for name, v in values.items():
+            self[name] = v
+
+    def __getitem__(self, name):
+        return self.values[name]
+
+    def __setitem__(self, name, value) -> None:
+        if name not in self.layout.index:
+            raise KeyError(name)
+        self.values[name] = value
+
+    def __getattr__(self, name):
+        try:
+            return self.values[name]
+        except KeyError:
+            raise AttributeError(name) from None
+
+    def __setattr__(self, name, value) -> None:
+        self[name] = value
+
+    def __eq__(self, other) -> bool:
+        return isinstance(other, Command) and self.layout is other.layout and self.values == other.values
 
     def write_into(self, frame: bytearray, base: int = 0) -> None:
-        """Write this command into `frame` at 0-based channel index `base`."""
-        if base < 0 or base + dmx_util.FOOTPRINT > len(frame):
-            raise ValueError(f'footprint does not fit at base {base}')
-        frame[base + dmx_util.CH_MODE] = self.mode
-        frame[base + dmx_util.CH_LEVEL] = dmx_util.encode_level(self.level)
-        frame[base + dmx_util.CH_RED] = self.r
-        frame[base + dmx_util.CH_GREEN] = self.g
-        frame[base + dmx_util.CH_BLUE] = self.b
+        """Write into `frame` at 0-based channel index `base`."""
+        self.layout.encode(self.values, frame, base)
 
     def to_frame(self, base: int = 0) -> bytearray:
         frame = bytearray(DMX_UNIVERSE_SIZE)
@@ -31,11 +50,7 @@ class DmxCommand:
         return frame
 
     @classmethod
-    def from_frame(cls, frame: bytes, base: int = 0) -> 'DmxCommand':
-        return cls(
-            mode=dmx_util.decode_mode(frame[base + dmx_util.CH_MODE]),
-            level=dmx_util.decode_level(frame[base + dmx_util.CH_LEVEL]),
-            r=frame[base + dmx_util.CH_RED],
-            g=frame[base + dmx_util.CH_GREEN],
-            b=frame[base + dmx_util.CH_BLUE],
-        )
+    def from_frame(cls, layout: Layout, frame: bytes, base: int = 0) -> 'Command':
+        cmd = cls(layout)
+        layout.decode(frame, base, cmd.values)
+        return cmd

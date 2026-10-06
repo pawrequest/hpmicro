@@ -1,50 +1,22 @@
-"""Shared DMX channel map. Single source of truth for laptop (CPython) and ESP32 (MicroPython).
+"""The robot's DMX channel layout. The only file to edit when channels change.
 
-Must stay runtime-portable: plain constants and pure functions only. No typing,
-dataclasses, enum or hardware imports. Copy/freeze this file onto the device.
-
-Channel table (offsets relative to the device's DMX start address):
-
-    offset  name      encoding
-    0       CH_MODE   MODE_* value
-    1       CH_LEVEL  0..255 -> 0.0..1.0 (master brightness)
-    2       CH_RED    0..255
-    3       CH_GREEN  0..255
-    4       CH_BLUE   0..255
-
-PLACEHOLDER content: replace channels as the real design firms up.
+Channel table (offsets relative to the device's DMX start address) is derived from
+LAYOUT below; see shared/dmx_layout.py for the available kinds.
 """
 
-try:
-    from micropython import const
-except ImportError:
-
-    def const(x):
-        return x
-
-
-# Channel offsets
-CH_MODE = const(0)
-CH_LEVEL = const(1)
-CH_RED = const(2)
-CH_GREEN = const(3)
-CH_BLUE = const(4)
-FOOTPRINT = const(5)  # number of channels used
+from shared.dmx_layout import Enum, Layout, Level, U8
 
 # CH_MODE values (spaced apart so small DMX jitter can't flip a mode)
-MODE_STOP = const(0)
-MODE_RUN = const(100)
+MODE_STOP = 0
+MODE_RUN = 100
 
-
-def encode_level(frac):
-    """0.0..1.0 -> 0..255 (clamped)."""
-    return max(0, min(255, round(frac * 255)))
-
-
-def decode_level(byte):
-    return byte / 255
-
-
-def decode_mode(byte):
-    """Map a raw byte to a MODE_* constant; unknown values fail safe to MODE_STOP."""
-    return MODE_RUN if byte == MODE_RUN else MODE_STOP
+LAYOUT = Layout(
+    [
+        ('mode', Enum((MODE_STOP, MODE_RUN), MODE_STOP)),
+        ('level', Level()),  # master brightness
+        ('r', U8()),
+        ('g', U8()),
+        ('b', U8()),
+    ]
+)
+FOOTPRINT = LAYOUT.footprint
