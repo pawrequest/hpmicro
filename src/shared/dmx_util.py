@@ -20,8 +20,6 @@ except ImportError:
         return x
 
 
-PROTOCOL_VERSION = const(1)
-
 # Channel offsets
 CH_MODE = const(0)
 CH_LEVEL = const(1)

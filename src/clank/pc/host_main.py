@@ -12,7 +12,7 @@ import math
 import time
 from argparse import Namespace
 
-from shared.config import COM_PORT
+from shared.config import COM_PORT, DMX_ADDRESS
 
 from shared import dmx_util as dmx_util
 from clank.pc.dmx_usb_tx import FRAME_INTERVAL, Dmx
@@ -34,20 +34,20 @@ def main() -> None:
     start = time.monotonic()
     channel = 1
     base = 0
+    seconds = 0
     try:
-        seconds = 0
         demo = True
-        while seconds <= 0 or time.monotonic() - start < args.seconds:
+        while seconds <= 0 or time.monotonic() - start < seconds:
             if demo:
                 cmd.mode = dmx_util.MODE_RUN
                 cmd.level = demo_level(time.monotonic() - start)
-            cmd.write_into(dmx.data, args.base)
+            cmd.write_into(dmx.data, DMX_ADDRESS)
             dmx.send()
             time.sleep(FRAME_INTERVAL)
     except KeyboardInterrupt:
         pass
     finally:
-        DmxCommand(mode=dmx_util.MODE_STOP).write_into(dmx.data, args.base)
+        DmxCommand(mode=dmx_util.MODE_STOP).write_into(dmx.data, DMX_ADDRESS)
         dmx.send()  # leave the receiver in a safe state
         dmx.close()
 

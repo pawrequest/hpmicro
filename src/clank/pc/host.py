@@ -9,7 +9,7 @@ DMX_UNIVERSE_SIZE = 512
 
 @dataclass(slots=True)
 class DmxCommand:
-    mode: int = dmx_util.MODE_STOP
+    mode: int = 1
     level: float = 0.0  # 0..1
 
     def write_into(self, frame: bytearray, base: int = 0) -> None:

@@ -6,10 +6,10 @@ application reads `state` and acts, keeping this module testable on a desktop.
 
 import time
 
-try:
-    from shared import dmx_util as p
-except (ImportError, ValueError):
-    import protocol as p  # flat layout on the device
+# try:
+from shared import dmx_util as dmx_util
+# except (ImportError, ValueError):
+#     import protocol as dmx_util  # flat layout on the device
 
 SIGNAL_TIMEOUT_MS = 500
 
@@ -18,15 +18,15 @@ class DmxState:
     __slots__ = ('mode', 'level', 'valid', '_last_ms')
 
     def __init__(self):
-        self.mode = p.MODE_STOP
+        self.mode = dmx_util.MODE_STOP
         self.level = 0.0
         self.valid = False  # False => no recent frame; act as stopped
         self._last_ms = 0
 
     def update(self, frame, base=0):
         """Decode `frame` (bytes-like) in place; no allocation beyond float boxing."""
-        self.mode = p.decode_mode(frame[base + p.CH_MODE])
-        self.level = p.decode_level(frame[base + p.CH_LEVEL])
+        self.mode = dmx_util.decode_mode(frame[base + dmx_util.CH_MODE])
+        self.level = dmx_util.decode_level(frame[base + dmx_util.CH_LEVEL])
         self.valid = True
         self._last_ms = time.ticks_ms()
 
@@ -34,5 +34,5 @@ class DmxState:
         """Call periodically; drops to failsafe if frames stopped arriving."""
         if self.valid and time.ticks_diff(time.ticks_ms(), self._last_ms) > SIGNAL_TIMEOUT_MS:
             self.valid = False
-            self.mode = p.MODE_STOP
+            self.mode = dmx_util.MODE_STOP
             self.level = 0.0
