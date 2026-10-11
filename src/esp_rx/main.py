@@ -4,7 +4,7 @@ import gc
 from micropython import alloc_emergency_exception_buf
 
 import dmx512_rx_pr
-import simple_config
+import device_config
 from shared.config import DMX_RX_ENABLE_PIN, DMX_RX_PIN
 
 # Environment Setup
@@ -32,8 +32,8 @@ def dmxstatuschange(status):
 
 
 def main_loop():
-    dmxrx_deviceaddress = simple_config.dmx_address  # Our device Base DMX Address
-    dmxrx_devicechannels = simple_config.dmx_channels  # How many channels we care about
+    dmxrx_deviceaddress = device_config.DMX_ADDRESS  # Our device Base DMX Address
+    dmxrx_devicechannels = device_config.DMX_CHANNELS  # How many channels we care about
 
     print("INFO: Starting Main Loop")
     dmx = dmx512_rx_pr.DMX(
