@@ -47,7 +47,7 @@ DMX_BAUDRATE = 250000
 BREAK_BAUDRATE = 9600
 FRAME_DELAY_S = 0.015  # matches FRAME_DELAY_MS in dmx_demo.py
 
-# esp2
+# stepper_complex
 
 # ---- Input source ----
 INPUT = "webrepl"  # "webrepl" | "dmx" | "ir"  (only the selected one is initialised)

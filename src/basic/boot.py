@@ -1,6 +1,3 @@
-# This file is executed on every boot (including wake-boot from deepsleep)
-# import esp
-# esp.osdebug(None)
 import time
 
 import network
@@ -8,28 +5,29 @@ import webrepl
 
 from device_config import IP_ADDRESS
 from shared.webrepl_cfg import PASS as WEBREPL_PASS
-from shared.wifi_config import (
-    DNS,
-    GATEWAY,
-    SUBNET,
-    PASSWORD,
-    SSID,
-    WIFI_TIMEOUT_SECONDS,
-)
 
-webrepl.start(password=WEBREPL_PASS)
 
 
 def connect_wifi(static: bool = False):
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     print("Connecting to Wi-Fi...")
-    if static:
-        print("fetching static IP configuration from wifi_config.py")
-        wlan.ifconfig((IP_ADDRESS, SUBNET, GATEWAY, DNS))
+    from shared.wifi_config import (
+        DNS,
+        GATEWAY,
+        SUBNET,
+        PASSWORD,
+        SSID,
+        WIFI_TIMEOUT_SECONDS,
+    )
 
     if not wlan.isconnected():
         print("not connected, attempting to connect to Wi-Fi...")
+        wlan.disconnect()  # cancel any pending connect from before the soft reboot
+        time.sleep_ms(200)
+        if static:
+            print("fetching static IP configuration from wifi_config.py")
+            wlan.ifconfig((IP_ADDRESS, SUBNET, GATEWAY, DNS))
         wlan.connect(SSID, PASSWORD)
         deadline = time.ticks_add(time.ticks_ms(), WIFI_TIMEOUT_SECONDS * 1000)
 
@@ -43,5 +41,5 @@ def connect_wifi(static: bool = False):
     print("Wi-Fi connected:", wlan.ifconfig()[0])
     return wlan
 
-
 connect_wifi(static=True)
+webrepl.start(password=WEBREPL_PASS)
