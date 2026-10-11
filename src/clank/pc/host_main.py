@@ -29,15 +29,13 @@ def demo_level(t: float) -> float:
 
 def main() -> None:
     # args = parse_args()
+    demo = True
 
     cmd = Command(dmx_util.LAYOUT)
     dmx = Dmx(COM_PORT)
     start = time.monotonic()
-    channel = 1
-    base = 0
     seconds = 0
     try:
-        demo = True
         while seconds <= 0 or time.monotonic() - start < seconds:
             if demo:
                 cmd.mode = dmx_util.MODE_RUN
@@ -68,4 +66,11 @@ def parse_args() -> Namespace:
 
 
 if __name__ == '__main__':
+    start = time.monotonic()
+
+    cmd = Command(dmx_util.LAYOUT)
+    cmd.mode = dmx_util.MODE_RUN
+    cmd.level = 1.0
+    t = time.monotonic() - start
+    cmd.hue = (t / COLOUR_CYCLE_S) % 1.0
     main()

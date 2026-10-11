@@ -108,3 +108,4 @@ def parse_args(argv=None) -> Namespace:
 
 if __name__ == "__main__":
     main(Namespace(port=COM_PORT, address=1, seconds=1000, demo=True, rgb=[]))
+    onboard_led_strut = (1, 3, 'handle-3chan')
