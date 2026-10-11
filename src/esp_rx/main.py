@@ -1,5 +1,5 @@
 import gc
-from pprint import pprint
+# from pprint import pprint
 
 from micropython import alloc_emergency_exception_buf
 
@@ -12,18 +12,18 @@ gc.threshold(16384)  # Run Garbage collection everytime 16KB is allocated
 alloc_emergency_exception_buf(512)  # Allocate Emergency Exception Buffer
 
 
-def parse_dmx_data(dmx_data):
-    if not all(isinstance(x, int) for x in dmx_data):
-        raise ValueError("All elements in dmx_data must be integers")
-    match dmx_data:
-        case a, b, c:
-            ...
-        case _:
-            pass
+# def parse_dmx_data(dmx_data):
+#     if not all(isinstance(x, int) for x in dmx_data):
+#         raise ValueError("All elements in dmx_data must be integers")
+#     match dmx_data:
+#         case a, b, c:
+#             ...
+#         case _:
+#             pass
 
 
 def printer(dmx_data):
-    pprint(dmx_data)
+    print(dmx_data)
     print(f"{type(dmx_data)=}")
 
 
