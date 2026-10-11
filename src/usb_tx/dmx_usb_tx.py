@@ -15,7 +15,7 @@ from argparse import Namespace
 
 import serial
 
-from shared.config import COM_PORT
+from shared.config import USB_DMX_COM_PORT
 
 UNIVERSE_SIZE = 512
 FRAME_INTERVAL = 0.025  # ~40 fps
@@ -91,7 +91,7 @@ def parse_args(argv=None) -> Namespace:
     p = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    p.add_argument("--port", default=COM_PORT, help=f"serial port (default {COM_PORT})")
+    p.add_argument("--port", default=USB_DMX_COM_PORT, help=f"serial port (default {USB_DMX_COM_PORT})")
     p.add_argument(
         "--address", type=int, default=1, help="DMX start address (default 1)"
     )
@@ -107,4 +107,4 @@ def parse_args(argv=None) -> Namespace:
 
 
 if __name__ == "__main__":
-    main(Namespace(port=COM_PORT, address=1, seconds=1000, demo=True, rgb=[]))
+    main(Namespace(port=USB_DMX_COM_PORT, address=1, seconds=1000, demo=True, rgb=[]))
