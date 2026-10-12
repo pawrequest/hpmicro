@@ -1,0 +1,1 @@
+artnet_to_opendmx_1.1.0 0 COM10 --name "Interface1" --remember --verbose
