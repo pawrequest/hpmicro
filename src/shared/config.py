@@ -9,7 +9,7 @@ DMX_RX_PIN = 15
 DMX_RX_ENABLE_PIN = 16  # active low
 DMX_TX_PIN = 18
 DMX_TX_ENABLE_PIN = 17  # active high
-USB_DMX_COM_PORT = "COM8"
+USB_DMX_COM_PORT = "COM12"
 # BUTTON_PIN = 13
 LED_PIN = None  # optional status LED (plain GPIO)
 
@@ -50,7 +50,7 @@ FRAME_DELAY_S = 0.015  # matches FRAME_DELAY_MS in dmx_demo.py
 # stepper_complex
 
 # ---- Input source ----
-INPUT = "webrepl"  # "webrepl" | "dmx" | "ir"  (only the selected one is initialised)
+INPUT = "dmx"  # "webrepl" | "dmx" | "ir"  (only the selected one is initialised)
 RUN_MODE = (
     "thread"  # "thread" (2nd thread, REPL stays free) | "timer" (soft Timer fallback)
 )

@@ -1,13 +1,14 @@
-from esp_rx.inputs.base import Input
+from base import Input
 
-from esp_rx import config, ramp
+from .. import ramp
+from shared import config
 
 
 class DmxInput(Input):
     def __init__(self, cmd, dmx=None):
         Input.__init__(self, cmd)
         if dmx is None:
-            from esp_rx.dmx import DMXReceiver  # only imported when DMX is selected
+            from ..dmx import DMXReceiver  # only imported when DMX is selected
 
             dmx = DMXReceiver()
         self.dmx = dmx

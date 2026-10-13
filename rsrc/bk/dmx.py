@@ -8,7 +8,7 @@ byte stream at those positions, so alignment is exact regardless of task latency
 
 from time import ticks_diff, ticks_ms, ticks_us
 
-import config
+from shared import config
 from machine import UART, Pin
 
 _MASK = 0xFFFFFF
